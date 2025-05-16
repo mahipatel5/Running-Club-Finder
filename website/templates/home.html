@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 class="text-center mt-5 mb-3 display-4">Find Running Clubs</h1>
+
+<form>
+    <div class="text-center my-3">
+      <input
+        type="search" id="mySearch" name="q" placeholder="Search by city…" />
+      <button>Search</button>
+    </div>
+  </form>
+
+<div class="container mt-4 mb-5">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#postForm" aria-expanded="false"
+        aria-controls="postForm">
+        Create Post
+    </button>
+</div>
+
+<div class="collapse container" id="postForm">
+    <form method="POST">
+        <input type="text" name="title" class="form-control" placeholder="Title" required>
+        <br />
+        <input type="url" name="image_url" class="form-control" placeholder="Image URL" required>
+        <br />
+        <input type="text" name="city" class="form-control" placeholder="City" required>
+        <br />
+        <input type="url" name="website" class="form-control" placeholder="Website URL" required>
+        <br />
+        <textarea name="note" id="note" class="form-control" placeholder="Description"></textarea>
+        <br />
+        <div align="center">
+            <button type="submit" class="btn btn-primary">Create Post</button>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row">
+        {% for note in notes %}
+        <div class="col-md-6 mb-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ note.title }}</h5>
+                    <p class="card-text">{{ note.city }}</p>
+                    <img src="{{ note.image_url }}" alt="Image for {{ note.title }}" class="img-fluid mb-3"
+                        style="height: 300px; width: 100%; object-fit: cover;">
+                    <p class="card-text">{{ note.data }}</p>
+                    <p class="card-text">
+                        <a href="{{ note.website }}" target="_blank" rel="noopener">Visit Website</a>
+                    </p>
+                    {% if user.is_authenticated and user.id == note.user_id %}
+                    <button type="button" class="btn btn-outline-danger" onClick="deleteNote({{ note.id }})">
+                        Delete
+                    </button>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
